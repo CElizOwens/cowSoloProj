@@ -1,0 +1,34 @@
+const db = require('./dataModel');
+
+const dataController = {};
+
+const baseError = {
+  status: 500,
+  message: { err: 'An error occurred' },
+};
+
+dataController.getConcerts = () => {
+  console.log('--> Inside dataController.getConcerst...');
+  const sql = `
+    SELECT
+      c.name, c.event_date, p.composer, p.title
+    FROM
+      concert c
+    JOIN
+      concert_piece cp ON (c.concert_id = cp.concert_id)
+    JOIN
+      piece p ON (cp.piece_id = p.piece_id);`;
+
+  db.query(sql)
+    .then((result) => {
+      res.locals.concerts = result.rows;
+      return next();
+    })
+    .catch((err) => {
+      baseError.log = `dataController.js: ${err}`;
+      baseError.message.err = 'Could not retrieve concerts.';
+      return next(baseError);
+    });
+};
+
+module.exports = dataController;
