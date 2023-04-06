@@ -49,10 +49,33 @@ const App = () => {
   //   return concerts.map(concert => <Concert concert={concert} />)
   // }
 
+  const list = [];
+  const cache = {};
+
+  console.log('concerts: ', concerts.length)
+
+  for (let i = 0; i < concerts.length; i++) {
+    const concert = concerts[i];
+    console.log("concert name: ", concert.name)
+    const piece = {composer: concert.composer, title: concert.title}; 
+    if (cache[concert.name]) cache[concert.name].pieces.push(piece);
+    else {
+      cache[concert.name] = {name: concert.name, event_date: concert.event_date, pieces: [piece]};
+    };
+  }
+
+  Object.keys(cache).forEach((concert, i) => {
+    console.log('--> cache[concert]: ', cache[concert]);
+    const event = cache[concert];
+    list.push(<Concert name={event.name} date={event.event_date} pieces={event.pieces} id={i} key={i} />)
+  })
+
+  
+  
   return (
     <div>
       <h1>Concert Planner</h1>
-      {concerts}
+      <div>{list}</div>
       {/* {makelist(concerts)} */}
       {/* <Concert concerts={concerts}/> */}
     </div>
