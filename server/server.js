@@ -1,30 +1,46 @@
-import express from 'express';
-import dataController from './dataController';
-
+const express = require('express');
 const path = require('path');
-const cors = require('cors');
+// const cors = require('cors');
+
+const dataController = require('./dataController');
 
 const app = express();
 
 const PORT = 3000;
 
-app.use(cors);
+// app.use(cors);
+// const corsOptionDelegate = function (req, callback) => {
+//   const corsOptions = {
+//     origin: false,
+//   };
+//   callback(null, corsOptions);
+// }
 
 /**
  * handle parsing request body
  */
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 /**
  * handle requests for static files
  */
 
-app.use(express.static(path.resolve(__dirname, '../client')));
+// app.use(express.static(path.resolve(__dirname, 'client')));
 
-app.get('/', dataController.getConcerts, (req, res) => {
-  res.status(200).json(res.locals.concerts);
-});
+app.get(
+  '/getConcerts',
+  (req, res, next) => {
+    console.log(`\n${req.url}\n`);
+    next();
+  },
+  dataController.getConcerts
+);
+
+app.get('/', (req, res) => res.status(200).json("It's working!!"));
 
 // handle requests for non-existent routes
 app.use((req, res) => res.status(404).send('Page not found.'));
@@ -43,5 +59,5 @@ app.use((err, req, res, next) => {
 
 // start server
 app.listen(PORT, () => {
-  console.log(`Server listening on port: ${PORT}...`);
+  console.log(`BeepBoop, Server listening on port: ${PORT}...`);
 });

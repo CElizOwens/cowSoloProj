@@ -7,8 +7,8 @@ const baseError = {
   message: { err: 'An error occurred' },
 };
 
-dataController.getConcerts = () => {
-  console.log('--> Inside dataController.getConcerst...');
+dataController.getConcerts = (req, res, next) => {
+  console.log('--> Inside dataController.getConcerts...');
   const sql = `
     SELECT
       c.name, c.event_date, p.composer, p.title
@@ -22,7 +22,7 @@ dataController.getConcerts = () => {
   db.query(sql)
     .then((result) => {
       res.locals.concerts = result.rows;
-      return next();
+      res.status(200).json(res.locals.concerts);
     })
     .catch((err) => {
       baseError.log = `dataController.js: ${err}`;
