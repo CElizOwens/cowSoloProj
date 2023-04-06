@@ -8,7 +8,15 @@ body {
 
 .concert {
   width: 20rem;
-  height: 10rem;
+  height: auto;
+  border: 2px solid black;
+  border-radius: 5px;
+  padding: 0 1rem;
+  background-color:aliceblue;
+}
+
+.piece {
+  /* background-color: aliceblue; */
 }
 
 h1 {
